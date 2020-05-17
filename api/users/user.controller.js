@@ -128,10 +128,10 @@ module.exports = {
         });
       }
       const result = compareSync(body.password, results.password);
-      if (result) {
+      if (results) {
         results.password = undefined;
-        const jsontoken = sign({ result: results }, "qwe1234", {
-          expiresIn: "1h",
+        const jsontoken = sign({ result: results }, "habashy1234", {
+          expiresIn: "24h",
         });
         return res.json({
           success: 1,
