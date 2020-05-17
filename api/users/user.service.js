@@ -2,7 +2,7 @@ let pool = require("../../config/databse");
 module.exports = {
   create: (data, callBack) => {
     pool.query(
-      `insert into users(firstname, lastname, gender, age, eduvation, job, phone, email, password) values(?,?,?,?,?,?,?,?,?)`,
+      `insert into users(firstname, lastname, gender, age, eduvation, job, phone, email, password, profilepicture) values(?,?,?,?,?,?,?,?,?,?)`,
       [
         data.firstname,
         data.lastname,
@@ -12,7 +12,8 @@ module.exports = {
         data.job,
         data.phone,
         data.email,
-        data.password
+        data.password,
+        data.profilepicture,
       ],
       (error, results, fields) => {
         if (error) {
@@ -22,7 +23,7 @@ module.exports = {
       }
     );
   },
-  getUser: callBack => {
+  getUser: (callBack) => {
     pool.query(
       `select id,firstname,lastname,gender,age,eduvation,job,phone,email,profilepicture,totalpoints from users`,
       [],
@@ -57,7 +58,7 @@ module.exports = {
         if (!results) {
           return results.json({
             success: 0,
-            message: "failed to update user"
+            message: "failed to update user",
           });
         }
         return callBack(null, results[0]);
@@ -75,7 +76,7 @@ module.exports = {
         if (!results) {
           return results.json({
             success: 0,
-            message: "failed to update user"
+            message: "failed to update user",
           });
         }
         return callBack(null, results);
@@ -93,5 +94,5 @@ module.exports = {
         return callBack(null, results[0]);
       }
     );
-  }
+  },
 };
