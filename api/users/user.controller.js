@@ -116,7 +116,7 @@ module.exports = {
     });
   },
   login: (req, res) => {
-    const body = req.body;
+    let body = req.body;
     getUserByUserEmail(body.email, (err, results) => {
       if (err) {
         console.log(err);
@@ -127,10 +127,10 @@ module.exports = {
           data: "Invalid email or password",
         });
       }
-      const result = compareSync(body.password, results.password);
+      let result = compareSync(body.password, results.password);
       if (results) {
         results.password = undefined;
-        const jsontoken = sign({ result: results }, "habashy1234", {
+        let jsontoken = sign({ result: results }, "habashy1234", {
           expiresIn: "24h",
         });
         return res.json({
