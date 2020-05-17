@@ -23,6 +23,18 @@ module.exports = {
       }
     );
   },
+  getUserByUserEmail: (email, callBack) => {
+    pool.query(
+      `select * from users where email = ?`,
+      [email],
+      (error, results, fields) => {
+        if (error) {
+          return callBack(error);
+        }
+        return callBack(null, results[0]);
+      }
+    );
+  },
   getUser: (callBack) => {
     pool.query(
       `select id,firstname,lastname,gender,age,eduvation,job,phone,email,profilepicture,totalpoints from users`,

@@ -4,7 +4,8 @@ let {
   getUser,
   updateUserPoint,
   updateUserName,
-  deleteUser
+  deleteUser,
+  login,
 } = require("./user.controller");
 let router = require("express").Router();
 
@@ -14,4 +15,5 @@ router.get("/", getUser);
 router.patch("/", updateUserPoint);
 router.put("/", updateUserName);
 router.delete("/", deleteUser);
+router.post("/login", login);
 module.exports = router;

@@ -5,10 +5,12 @@ let {
   updateUserPoint,
   updateUserName,
   updateUserPassword,
-  deleteUser
+  deleteUser,
+  getUserByUserEmail,
 } = require("./user.service");
 
-let { genSaltSync, hashSync } = require("bcrypt");
+let { genSaltSync, hashSync, compareSync } = require("bcrypt");
+let { sign } = require("jsonwebtoken");
 module.exports = {
   createUser: (req, res) => {
     let body = req.body;
@@ -19,12 +21,12 @@ module.exports = {
         console.log(error);
         return res.status(500).json({
           success: 0,
-          message: "database connection error"
+          message: "database connection error",
         });
       }
       return res.status(200).json({
         success: 1,
-        data: results
+        data: results,
       });
     });
   },
@@ -38,12 +40,12 @@ module.exports = {
       if (!results) {
         return res.json({
           success: 0,
-          message: "record not found"
+          message: "record not found",
         });
       }
       return res.json({
         success: 1,
-        data: results
+        data: results,
       });
     });
   },
@@ -55,7 +57,7 @@ module.exports = {
       }
       return res.json({
         success: 1,
-        data: results
+        data: results,
       });
     });
   },
@@ -68,7 +70,7 @@ module.exports = {
       }
       return res.json({
         success: 1,
-        message: "updated successfully"
+        message: "updated successfully",
       });
     });
   },
@@ -81,7 +83,7 @@ module.exports = {
       }
       return res.json({
         success: 1,
-        message: "updated successfully"
+        message: "updated successfully",
       });
     });
   },
@@ -96,7 +98,7 @@ module.exports = {
       }
       return res.json({
         success: 1,
-        message: "updated successfully"
+        message: "updated successfully",
       });
     });
   },
@@ -109,8 +111,39 @@ module.exports = {
       }
       return res.json({
         success: 1,
-        message: "user deleted successfully"
+        message: "user deleted successfully",
       });
     });
-  }
+  },
+  login: (req, res) => {
+    const body = req.body;
+    getUserByUserEmail(body.email, (err, results) => {
+      if (err) {
+        console.log(err);
+      }
+      if (!results) {
+        return res.json({
+          success: 0,
+          data: "Invalid email or password",
+        });
+      }
+      const result = compareSync(body.password, results.password);
+      if (result) {
+        results.password = undefined;
+        const jsontoken = sign({ result: results }, "qwe1234", {
+          expiresIn: "1h",
+        });
+        return res.json({
+          success: 1,
+          message: "login successfully",
+          token: jsontoken,
+        });
+      } else {
+        return res.json({
+          success: 0,
+          data: "Invalid email or password",
+        });
+      }
+    });
+  },
 };
